@@ -1,0 +1,127 @@
+{
+  "sourceUrl": "https://cybersectools.com/categories/ai-security?page=2",
+  "retrievedAt": "2026-09-30",
+  "note": "Structured extract of the visible vendor listings. CybersecTools returned HTTP 429 to direct raw HTML downloads.",
+  "listings": [
+    {
+      "name": "Airia Agent Constraints",
+      "description": "Enforces runtime operational boundaries and controls on enterprise AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/airia-agent-constraints"
+    },
+    {
+      "name": "AI Model Guardrails",
+      "description": "Runtime AI guardrails platform enforcing policies on LLM prompts and responses.",
+      "toolUrl": "https://cybersectools.com/tools/ai-model-guardrails"
+    },
+    {
+      "name": "AI Classification",
+      "description": "AI platform that correlates enterprise telemetry to detect risk & generate policy.",
+      "toolUrl": "https://cybersectools.com/tools/ai-classification"
+    },
+    {
+      "name": "Agentic Fabriq Shadow AI",
+      "description": "AI agent firewall that blocks unauthorized agents via credential vaulting.",
+      "toolUrl": "https://cybersectools.com/tools/agentic-fabriq-shadow-ai"
+    },
+    {
+      "name": "Agentic Fabriq Internal Agents",
+      "description": "Governs employee AI agents with identity, permissions, and audit trails.",
+      "toolUrl": "https://cybersectools.com/tools/agentic-fabriq-internal-agents"
+    },
+    {
+      "name": "Agentic Fabriq Coding Agents",
+      "description": "Brokers and governs AI coding agent access on developer machines.",
+      "toolUrl": "https://cybersectools.com/tools/agentic-fabriq-coding-agents"
+    },
+    {
+      "name": "Agentic Fabriq Audit Trail",
+      "description": "Centralized audit trail for AI agent actions with dual-identity & policy verdicts.",
+      "toolUrl": "https://cybersectools.com/tools/agentic-fabriq-audit-trail"
+    },
+    {
+      "name": "Agent Permissions",
+      "description": "Enforces per-user permission boundaries for AI agents at the tool-call level.",
+      "toolUrl": "https://cybersectools.com/tools/agent-permissions"
+    },
+    {
+      "name": "Agen.co Platform",
+      "description": "Identity-native platform that discovers, brokers, governs, and audits AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/agenco-platform"
+    },
+    {
+      "name": "Agen.co Personas",
+      "description": "AI agent governance platform for CISOs, security teams, IT, and developers.",
+      "toolUrl": "https://cybersectools.com/tools/agenco-personas"
+    },
+    {
+      "name": "Agen.co Govern",
+      "description": "Runtime per-action authorization and governance platform for AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/agenco-govern"
+    },
+    {
+      "name": "Agen.co Discover",
+      "description": "Discovers and inventories all AI agents across identity providers, cloud, and endpoints.",
+      "toolUrl": "https://cybersectools.com/tools/agenco-discover"
+    },
+    {
+      "name": "Agen Shield",
+      "description": "Endpoint & browser enforcement layer blocking dangerous AI agent actions pre-execution.",
+      "toolUrl": "https://cybersectools.com/tools/agen-shield"
+    },
+    {
+      "name": "Agen Observability",
+      "description": "Discovers, monitors, and governs AI agent & MCP access to enterprise systems.",
+      "toolUrl": "https://cybersectools.com/tools/agen-observability"
+    },
+    {
+      "name": "0DIN Multi-Model Guardrail Jailbreak Correct Me",
+      "description": "LLM guardrail jailbreak disclosure using a Correct Me fact-check tactic.",
+      "toolUrl": "https://cybersectools.com/tools/0din-multi-model-guardrail-jailbreak-correct-me"
+    },
+    {
+      "name": "OpenClaw Continuous Security Audit Skill",
+      "description": "AI gateway security audit skill for inspecting and auditing AI traffic.",
+      "toolUrl": "https://cybersectools.com/tools/openclaw-continuous-security-audit-skill"
+    },
+    {
+      "name": "Arrakis Security Platform",
+      "description": "Security platform for behavioral visibility and control over autonomous AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/arrakis-security-platform"
+    },
+    {
+      "name": "AI Visibility & Governance",
+      "description": "Mobile-native platform for discovering, monitoring, and governing AI app usage.",
+      "toolUrl": "https://cybersectools.com/tools/ai-visibility-and-governance"
+    },
+    {
+      "name": "Neo",
+      "description": "Agentic AI control platform for SecOps to govern autonomous AI tools at runtime.",
+      "toolUrl": "https://cybersectools.com/tools/neo"
+    },
+    {
+      "name": "Tenet Security Platform",
+      "description": "Runtime security platform for AI agents covering detection, protection, and validation.",
+      "toolUrl": "https://cybersectools.com/tools/tenet-security-platform"
+    },
+    {
+      "name": "NeuralTrust Prevent Shadow AI",
+      "description": "Detects & governs unauthorized AI tool usage by employees via browser agent.",
+      "toolUrl": "https://cybersectools.com/tools/neuraltrust-prevent-shadow-ai"
+    },
+    {
+      "name": "NeuralTrust Model Scanner",
+      "description": "Scans AI models for malicious code, vulnerabilities, and unsafe artifacts pre-deployment.",
+      "toolUrl": "https://cybersectools.com/tools/neuraltrust-model-scanner"
+    },
+    {
+      "name": "NeuralTrust Observability",
+      "description": "Tracing, analytics, and observability platform for LLM pipelines and GenAI apps.",
+      "toolUrl": "https://cybersectools.com/tools/neuraltrust-observability"
+    },
+    {
+      "name": "RealmGuard",
+      "description": "AI guardrail platform detecting harmful outputs, prompt injections & policy violations.",
+      "toolUrl": "https://cybersectools.com/tools/realm-labs-platform"
+    }
+  ]
+}

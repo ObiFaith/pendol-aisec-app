@@ -1,0 +1,127 @@
+{
+  "sourceUrl": "https://cybersectools.com/categories/ai-security",
+  "retrievedAt": "2026-09-30",
+  "note": "Structured extract of the visible vendor listings. CybersecTools returned HTTP 429 to direct raw HTML downloads.",
+  "listings": [
+    {
+      "name": "WhiteFin",
+      "description": "Authority layer that bounds and verifies what AI agents are permitted to do.",
+      "toolUrl": "https://cybersectools.com/tools/whitefin"
+    },
+    {
+      "name": "Pistra",
+      "description": "The AI enforcement layer. Every AI call, enforced and provable.",
+      "toolUrl": "https://cybersectools.com/tools/pistra"
+    },
+    {
+      "name": "Origin Endpoint AI Observability",
+      "description": "Endpoint sensor that inventories AI agents and traces their prompts, tools and files.",
+      "toolUrl": "https://cybersectools.com/tools/origin-endpoint-ai-observability"
+    },
+    {
+      "name": "HOL Guard",
+      "description": "Local-first runtime firewall for AI coding agents.",
+      "toolUrl": "https://cybersectools.com/tools/hol-guard"
+    },
+    {
+      "name": "Shadow Defend",
+      "description": "Browser extension for AI governance: discovers, monitors & controls AI tool use.",
+      "toolUrl": "https://cybersectools.com/tools/shadowdefend"
+    },
+    {
+      "name": "Wider Security AEGIS",
+      "description": "Runtime containment layer that supervises & isolates AI agent actions.",
+      "toolUrl": "https://cybersectools.com/tools/wider-security-aegis"
+    },
+    {
+      "name": "Votal AI Agent IDP & Guardrails",
+      "description": "Issues cryptographic identities & enforces runtime policies for AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/votal-ai-agent-idp-and-guardrails"
+    },
+    {
+      "name": "Votal AI Agent Identity",
+      "description": "Issues cryptographic identities & enforces runtime policies for AI agents.",
+      "toolUrl": "https://cybersectools.com/tools/votal-ai-agent-identity"
+    },
+    {
+      "name": "Votal AI",
+      "description": "Continuously stress-tests production AI models with adversarial attacks per deploy.",
+      "toolUrl": "https://cybersectools.com/tools/votal-ai"
+    },
+    {
+      "name": "Verno Labs Platform",
+      "description": "AI agent security platform for red teaming, runtime protection & remediation.",
+      "toolUrl": "https://cybersectools.com/tools/verno-labs-platform"
+    },
+    {
+      "name": "Sovereign AI Platform",
+      "description": "Enterprise AI governance control plane for workforce & agent LLM access.",
+      "toolUrl": "https://cybersectools.com/tools/sovereign-ai-platform"
+    },
+    {
+      "name": "Sovereign AI Governance",
+      "description": "AI governance gateway enforcing policy, isolation, key management, and audit for AI usage.",
+      "toolUrl": "https://cybersectools.com/tools/sovereign-ai-governance"
+    },
+    {
+      "name": "Primary Zero Trust Architecture",
+      "description": "Zero Trust control plane for human and agentic AI identity enforcement.",
+      "toolUrl": "https://cybersectools.com/tools/primary-zero-trust-architecture"
+    },
+    {
+      "name": "Primary Visibility",
+      "description": "Unified visibility platform monitoring human & AI agent activity for audit & compliance.",
+      "toolUrl": "https://cybersectools.com/tools/primary-visibility"
+    },
+    {
+      "name": "Primary Agentic Control Plane",
+      "description": "Agentic control plane for governing human & AI agent identity, policy, and access.",
+      "toolUrl": "https://cybersectools.com/tools/primary-agentic-control-plane"
+    },
+    {
+      "name": "Primary",
+      "description": "Control plane for governing human & AI agent identities, access, and workflows.",
+      "toolUrl": "https://cybersectools.com/tools/primary"
+    },
+    {
+      "name": "Gradient for Agents",
+      "description": "Control plane securing AI agents via hardware-anchored identity and scoped tokens.",
+      "toolUrl": "https://cybersectools.com/tools/gradient-for-agents"
+    },
+    {
+      "name": "Cantina Trust, Governance & Auditability",
+      "description": "Governance & audit controls for AI security agents performing autonomous remediation.",
+      "toolUrl": "https://cybersectools.com/tools/cantina-trust-governance-and-auditability"
+    },
+    {
+      "name": "Airlock Digital Agentic AI Control & Governance",
+      "description": "Endpoint platform to discover, govern, and monitor AI agent behavior in real time.",
+      "toolUrl": "https://cybersectools.com/tools/airlock-digital-agentic-ai-control-and-governance"
+    },
+    {
+      "name": "Airia AI Platform Risk Classifications",
+      "description": "AI risk classification platform for regulatory framework alignment.",
+      "toolUrl": "https://cybersectools.com/tools/airia-ai-platform-risk-classifications"
+    },
+    {
+      "name": "Airia AI Platform Guardrails",
+      "description": "Runtime AI guardrails securing prompts, outputs, and agent workflows.",
+      "toolUrl": "https://cybersectools.com/tools/airia-ai-platform-guardrails"
+    },
+    {
+      "name": "Airia AI Platform",
+      "description": "Enterprise AI platform unifying orchestration, security, and governance for AI.",
+      "toolUrl": "https://cybersectools.com/tools/airia-ai-platform"
+    },
+    {
+      "name": "Airia AI Inventory Management",
+      "description": "Discovers, classifies, and governs all AI agents across enterprise environments.",
+      "toolUrl": "https://cybersectools.com/tools/airia-ai-inventory-management"
+    },
+    {
+      "name": "Airia AI Discovery",
+      "description": "Discovers and inventories shadow AI usage across enterprise apps, APIs, and code.",
+      "toolUrl": "https://cybersectools.com/tools/airia-ai-discovery"
+    }
+  ]
+}

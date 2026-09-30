@@ -1,0 +1,194 @@
+[
+  {
+    "id": "whitefin",
+    "name": "WhiteFin",
+    "website": "https://whitefin.ai/",
+    "description": "WhiteFin provides an authority layer for autonomous AI systems, defining, enforcing, and verifying the bounded power organizations delegate to AI agents.",
+    "sourceUrl": "https://cybersectools.com/tools/whitefin",
+    "sourcePage": 1
+  },
+  {
+    "id": "pistra",
+    "name": "Pistra",
+    "website": "https://pistra.ai/",
+    "description": "The AI enforcement layer. Every model, tool, and agent call is checked against policy, with each decision recorded for verification.",
+    "sourceUrl": "https://cybersectools.com/tools/pistra",
+    "sourcePage": 1
+  },
+  {
+    "id": "origin",
+    "name": "Origin",
+    "website": "https://www.originhq.com/platform",
+    "description": "Endpoint sensor that inventories AI agents and traces their prompts, tools, and files.",
+    "sourceUrl": "https://cybersectools.com/tools/origin-endpoint-ai-observability",
+    "sourcePage": 1
+  },
+  {
+    "id": "hol-guard",
+    "name": "HOL Guard",
+    "website": "https://hol.org/guard",
+    "description": "Local-first runtime firewall for AI coding agents.",
+    "sourceUrl": "https://cybersectools.com/tools/hol-guard",
+    "sourcePage": 1
+  },
+  {
+    "id": "shadow-defend",
+    "name": "Shadow Defend",
+    "website": "https://shadowdefend.com/",
+    "description": "Browser extension for AI governance: discovers, monitors, and controls AI tool use.",
+    "sourceUrl": "https://cybersectools.com/tools/shadowdefend",
+    "sourcePage": 1
+  },
+  {
+    "id": "wider-security",
+    "name": "Wider Security",
+    "website": "https://www.widersecurity.com/aegis",
+    "description": "Runtime containment layer that supervises and isolates AI agent actions.",
+    "sourceUrl": "https://cybersectools.com/tools/wider-security-aegis",
+    "sourcePage": 1
+  },
+  {
+    "id": "votalai",
+    "name": "VotalAI",
+    "website": "https://votal.ai/lp",
+    "description": "Continuously stress-tests production AI models with adversarial attacks on each deployment.",
+    "sourceUrl": "https://cybersectools.com/tools/votal-ai",
+    "sourcePage": 1
+  },
+  {
+    "id": "verno-labs",
+    "name": "Verno Labs",
+    "website": "https://vernolabs.ai/platform",
+    "description": "AI agent security platform for red teaming, runtime protection, and remediation.",
+    "sourceUrl": "https://cybersectools.com/tools/verno-labs-platform",
+    "sourcePage": 1
+  },
+  {
+    "id": "armor-defense",
+    "name": "Armor Defense",
+    "website": "https://www.sovai.com/platform",
+    "description": "Enterprise AI governance control plane for workforce and agent LLM access.",
+    "sourceUrl": "https://cybersectools.com/tools/sovereign-ai-platform",
+    "sourcePage": 1
+  },
+  {
+    "id": "primary",
+    "name": "Primary",
+    "website": "https://primary.ai/what-is-primary",
+    "description": "Control plane for governing human and AI agent identities, access, and workflows.",
+    "sourceUrl": "https://cybersectools.com/tools/primary",
+    "sourcePage": 1
+  },
+  {
+    "id": "gradient",
+    "name": "Gradient",
+    "website": "https://www.gradient.tech/gradient-for-agents/",
+    "description": "Control plane securing AI agents via hardware-anchored identity and scoped tokens.",
+    "sourceUrl": "https://cybersectools.com/tools/gradient-for-agents",
+    "sourcePage": 1
+  },
+  {
+    "id": "cantina",
+    "name": "Cantina",
+    "website": "https://www.cantina.security/trust",
+    "description": "Governance and audit controls for AI security agents performing autonomous remediation.",
+    "sourceUrl": "https://cybersectools.com/tools/cantina-trust-governance-and-auditability",
+    "sourcePage": 1
+  },
+  {
+    "id": "airlock-digital",
+    "name": "Airlock Digital",
+    "website": "https://www.airlockdigital.com/agentic-ai-control-governance",
+    "description": "Endpoint platform to discover, govern, and monitor AI agent behavior in real time.",
+    "sourceUrl": "https://cybersectools.com/tools/airlock-digital-agentic-ai-control-and-governance",
+    "sourcePage": 1
+  },
+  {
+    "id": "airia",
+    "name": "Airia",
+    "website": "https://airia.com/ai-platform/",
+    "description": "Enterprise AI platform unifying orchestration, security, and governance for AI.",
+    "sourceUrl": "https://cybersectools.com/tools/airia-ai-platform",
+    "sourcePage": 1
+  },
+  {
+    "id": "agentic-fabriq",
+    "name": "Agentic Fabriq",
+    "website": "https://www.agenticfabriq.com/product/shadow-ai",
+    "description": "AI agent firewall that blocks unauthorized agents via credential vaulting.",
+    "sourceUrl": "https://cybersectools.com/tools/agentic-fabriq-shadow-ai",
+    "sourcePage": 2
+  },
+  {
+    "id": "agenco",
+    "name": "Agen.co",
+    "website": "https://agen.co/platform",
+    "description": "Identity-native platform that discovers, brokers, governs, and audits AI agents.",
+    "sourceUrl": "https://cybersectools.com/tools/agenco-platform",
+    "sourcePage": 2
+  },
+  {
+    "id": "odin",
+    "name": "0DIN",
+    "website": "https://0din.ai/disclosures/e2dc26bd-dbfa-4084-987c-5fc0bccee624",
+    "description": "LLM guardrail jailbreak disclosure using a Correct Me fact-check tactic.",
+    "sourceUrl": "https://cybersectools.com/tools/0din-multi-model-guardrail-jailbreak-correct-me",
+    "sourcePage": 2
+  },
+  {
+    "id": "trent-ai",
+    "name": "Trent AI",
+    "website": "https://trent.ai/openclaw/",
+    "description": "AI gateway security audit skill for inspecting and auditing AI traffic.",
+    "sourceUrl": "https://cybersectools.com/tools/openclaw-continuous-security-audit-skill",
+    "sourcePage": 2
+  },
+  {
+    "id": "arrakis-security",
+    "name": "Arrakis Security",
+    "website": "https://arrakis.security/platform",
+    "description": "Security platform for behavioral visibility and control over autonomous AI agents.",
+    "sourceUrl": "https://cybersectools.com/tools/arrakis-security-platform",
+    "sourcePage": 2
+  },
+  {
+    "id": "lookout",
+    "name": "Lookout",
+    "website": "https://security.lookout.com/platform/ai-visibility-governance",
+    "description": "Mobile-native platform for discovering, monitoring, and governing AI app usage.",
+    "sourceUrl": "https://cybersectools.com/tools/ai-visibility-and-governance",
+    "sourcePage": 2
+  },
+  {
+    "id": "neo-security",
+    "name": "Neo",
+    "website": "https://www.neo.ai/platform",
+    "description": "Agentic AI control platform for SecOps to govern autonomous AI tools at runtime.",
+    "sourceUrl": "https://cybersectools.com/tools/neo",
+    "sourcePage": 2
+  },
+  {
+    "id": "tenet-security",
+    "name": "Tenet Security",
+    "website": "https://tenetsecurity.ai/product/",
+    "description": "Runtime security platform for AI agents covering detection, protection, and validation.",
+    "sourceUrl": "https://cybersectools.com/tools/tenet-security-platform",
+    "sourcePage": 2
+  },
+  {
+    "id": "neuraltrust",
+    "name": "NeuralTrust",
+    "website": "https://neuraltrust.ai/shadow-ai",
+    "description": "Detects and governs unauthorized AI tool usage by employees via a browser agent.",
+    "sourceUrl": "https://cybersectools.com/tools/neuraltrust-prevent-shadow-ai",
+    "sourcePage": 2
+  },
+  {
+    "id": "realm-labs",
+    "name": "Realm Labs",
+    "website": "https://www.realmlabs.ai/realmguard",
+    "description": "AI guardrail platform detecting harmful outputs, prompt injections, and policy violations.",
+    "sourceUrl": "https://cybersectools.com/tools/realm-labs-platform",
+    "sourcePage": 2
+  }
+]
