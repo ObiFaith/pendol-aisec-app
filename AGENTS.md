@@ -41,13 +41,14 @@ Available checks and scripts:
 npm test       # Run server/source.test.ts with Node's test runner through tsx
 npm run build  # TypeScript project check, then production Vite build
 npm run seed   # Insert missing starter vendors into SQLite
+npm start      # Seed database and start production Express server
 ```
 
 There are no configured lint, standalone type-check, formatting, migration, or deployment scripts. The build's `tsc -b` step performs the available TypeScript check.
 
 ## Configuration and Data
 
-- `API_PORT` optionally changes the Express port; default is `3001`.
+- `PORT` or `API_PORT` changes the Express port; default is `3001`. In production, Express serves compiled static assets from `dist/`.
 - The SQLite path is `data/vendors.sqlite`, resolved from the current working directory. Run npm commands from the repository root.
 - No authentication or authorization middleware is currently implemented; treat this as a local development application, not a production-ready service.
 - `data/category-page-1.json` and `data/category-page-2.json` are structured listing extracts, not raw HTML. `data/vendors.json` provides the initial distinct-vendor records.

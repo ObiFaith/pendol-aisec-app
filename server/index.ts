@@ -1,11 +1,13 @@
 import { z } from "zod";
 import express from "express";
+import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { db, getVendor, listVendors } from "./db.js";
 import { parseCybersecToolsTool } from "./source.js";
 
 export const app = express();
-const port = Number(process.env.API_PORT ?? 3001);
+const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
 app.use(express.json({ limit: "32kb" }));
 
 export function formatRefreshFailure(status: number): string {
@@ -126,6 +128,18 @@ app.post("/api/vendors/:id/refresh", async (request, response) => {
     response.status(502).json({ error: message });
   }
 });
+
+const distPath = resolve(process.cwd(), "dist");
+if (existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get("{*path}", (request, response, next) => {
+    if (request.path.startsWith("/api")) {
+      next();
+      return;
+    }
+    response.sendFile(resolve(distPath, "index.html"));
+  });
+}
 
 const isDirectExecution =
   process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];

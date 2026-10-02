@@ -8,6 +8,7 @@
     "dev:server": "tsx watch server/index.ts",
     "dev:web": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
+    "start": "tsx server/seed.ts && tsx server/index.ts",
     "test": "tsx --test server/*.test.ts",
     "seed": "tsx server/seed.ts"
   },
