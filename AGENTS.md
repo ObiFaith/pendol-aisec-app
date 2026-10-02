@@ -11,7 +11,7 @@ Keep this file synchronized with major architectural, workflow, dependency, and 
 - React 19 with TypeScript; Vite serves the frontend.
 - Express 5 provides a JSON API; `better-sqlite3` persists records in SQLite.
 - Cheerio parses CybersecTools pages; Zod validates vendor updates; `lucide-react` supplies UI icons.
-- `src/`: the React app (`App.tsx`), entry point (`main.tsx`), and global styling (`styles.css`).
+- `src/`: the React app entry point (`App.tsx`), bootstrap entry point (`main.tsx`), global styling (`styles.css`), modular components (`components/`), page views (`pages/`), custom hooks (`hooks/`), API services (`services/`), domain types (`types/`), and formatting helpers (`utils/`).
 - `server/`: Express API (`index.ts`), SQLite setup/queries (`db.ts`), seed command (`seed.ts`), source parser (`source.ts`), and parser tests.
 - `data/`: category listing extracts, initial vendor records, and the runtime SQLite database.
 - `source_pages/`: retained source-page screenshots.
