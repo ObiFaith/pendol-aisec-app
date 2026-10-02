@@ -1,6 +1,5 @@
-import assert from "node:assert/strict";
 import test from "node:test";
-
+import assert from "node:assert/strict";
 import { formatRefreshFailure } from "./index.js";
 
 test("refresh returns a friendly rate-limit message when CybersecTools responds 429", () => {

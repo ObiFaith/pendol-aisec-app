@@ -2,19 +2,19 @@
 
 :root {
   font-family: "DM Sans", sans-serif;
-  color: #212a26;
-  background: #f1f2ec;
+  color: #102b4d;
+  background: #edf5ff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --paper: #f1f2ec;
-  --surface: #fbfcf8;
-  --ink: #212a26;
-  --muted: #77817a;
-  --line: #dfe3db;
-  --green: #386b59;
-  --green-dark: #244c3d;
-  --lime: #c7d887;
-  --red: #a34032;
+  --paper: #edf5ff;
+  --surface: #f9fbff;
+  --ink: #102b4d;
+  --muted: #5d7694;
+  --line: #d7e6fb;
+  --green: #0d6efd;
+  --green-dark: #0a4ba3;
+  --lime: #cfe8ff;
+  --red: #b94d54;
   --mono: "DM Mono", monospace;
 }
 
@@ -64,8 +64,8 @@ a {
   place-items: center;
   width: 30px;
   height: 30px;
-  background: var(--green-dark);
-  color: #f4f4e8;
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  color: #f4f8ff;
 }
 .brand-divider {
   color: #abb2a7;
@@ -106,8 +106,8 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #779750;
-  box-shadow: 0 0 0 3px #e0e9d4;
+  background: #2b82ff;
+  box-shadow: 0 0 0 3px #dfeeff;
 }
 .meta-divider {
   color: #b2b8ae;
@@ -168,11 +168,11 @@ h1 em {
   grid-template-columns: minmax(280px, 0.83fr) minmax(420px, 1.5fr);
   min-height: 620px;
   border: 1px solid #d9ded5;
-  background: var(--surface);
+  background: #fff;
   box-shadow: 0 15px 45px #233b2c0a;
 }
 .directory-panel {
-  background: #f8f9f4;
+  background: var(--surface);
   border-right: 1px solid var(--line);
   min-width: 0;
   display: flex;
@@ -274,7 +274,7 @@ h1 em {
 }
 .page-tabs button.active {
   color: var(--green-dark);
-  background: #e8eee4;
+  background: #eaf3ff;
   font-weight: 600;
 }
 .result-count {
@@ -308,7 +308,7 @@ h1 em {
   background: #f0f3ec;
 }
 .vendor-row.selected {
-  background: #e9efe7;
+  background: #edf5ff;
   box-shadow: inset 3px 0 var(--green);
 }
 .row-number {
@@ -392,8 +392,8 @@ h1 em {
   width: 52px;
   display: grid;
   place-items: center;
-  background: #e8eee4;
-  border: 1px solid #d9e2d7;
+  background: linear-gradient(135deg, #edf5ff, #dfeeff);
+  border: 1px solid #d7e6fb;
   color: var(--green);
   font:
     400 25px "Newsreader",
@@ -429,7 +429,7 @@ h1 em {
 }
 .source-link:hover {
   color: var(--green);
-  border-color: #8ca596;
+  border-color: #9abefa;
 }
 .metadata-strip {
   display: flex;
@@ -574,11 +574,11 @@ textarea {
 }
 .save-button {
   border: 1px solid var(--green-dark);
-  background: var(--green-dark);
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
   color: #fff;
 }
 .save-button:hover:not(:disabled) {
-  background: #315b49;
+  background: linear-gradient(135deg, #0a3f94, #0d6efd);
 }
 .save-button:disabled,
 .refresh-button:disabled {

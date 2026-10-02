@@ -1,6 +1,6 @@
-import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import express from "express";
+import { fileURLToPath } from "node:url";
 import { db, getVendor, listVendors } from "./db.js";
 import { parseCybersecToolsTool } from "./source.js";
 
@@ -55,11 +55,9 @@ app.put("/api/vendors/:id", (request, response) => {
 
   const parsed = vendorFields.safeParse(request.body);
   if (!parsed.success) {
-    response
-      .status(400)
-      .json({
-        error: parsed.error.issues[0]?.message ?? "Invalid vendor data",
-      });
+    response.status(400).json({
+      error: parsed.error.issues[0]?.message ?? "Invalid vendor data",
+    });
     return;
   }
 
@@ -102,11 +100,9 @@ app.post("/api/vendors/:id/refresh", async (request, response) => {
 
     const record = parseCybersecToolsTool(await upstream.text());
     if (!record.name || !record.website || !record.description) {
-      response
-        .status(422)
-        .json({
-          error: "The source page did not contain all required vendor fields",
-        });
+      response.status(422).json({
+        error: "The source page did not contain all required vendor fields",
+      });
       return;
     }
 
