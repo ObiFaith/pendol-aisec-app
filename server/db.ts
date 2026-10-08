@@ -1,5 +1,6 @@
 import { mkdirSync } from "node:fs";
 import Database from "better-sqlite3";
+import { Vendor } from "../src/types";
 import { dirname, resolve } from "node:path";
 
 const databasePath = resolve(process.cwd(), "data", "vendors.sqlite");
@@ -20,18 +21,6 @@ db.exec(`
     refreshed_at TEXT
   );
 `);
-
-export type Vendor = {
-  id: string;
-  name: string;
-  website: string;
-  description: string;
-  sourceUrl: string;
-  sourcePage: number;
-  createdAt: string;
-  updatedAt: string;
-  refreshedAt: string | null;
-};
 
 export function listVendors(search = ""): Vendor[] {
   const pattern = `%${search.trim()}%`;

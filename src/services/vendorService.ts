@@ -1,7 +1,12 @@
 import type { Draft, Vendor } from "../types/vendor";
 
-export async function fetchVendors(query: string = ""): Promise<Vendor[]> {
-  const response = await fetch(`/api/vendors?q=${encodeURIComponent(query)}`);
+export async function fetchVendors(
+  query: string = "",
+  options?: { signal?: AbortSignal },
+): Promise<Vendor[]> {
+  const response = await fetch(`/api/vendors?q=${encodeURIComponent(query)}`, {
+    signal: options?.signal,
+  });
   if (!response.ok) {
     throw new Error("Could not load the vendor register.");
   }

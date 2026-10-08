@@ -19,34 +19,40 @@ export function useVendors() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    let active = true;
-    setLoading(true);
-    fetchVendors(search)
-      .then((records) => {
-        if (!active) return;
+    const controller = new AbortController();
+
+    const timer = setTimeout(async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const records = await fetchVendors(search, {
+          signal: controller.signal,
+        });
+
         setVendors(records);
         setSelectedId((current) =>
-          current && records.some((item) => item.id === current)
+          current && records.some((vendor) => vendor.id === current)
             ? current
             : (records[0]?.id ?? null),
         );
-        setError("");
-      })
-      .catch((requestError: unknown) => {
-        if (active) {
-          setError(
-            requestError instanceof Error
-              ? requestError.message
-              : "Could not load vendors.",
-          );
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
         }
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
+        setError(
+          error instanceof Error ? error.message : "Could not load vendors.",
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }, 300);
 
     return () => {
-      active = false;
+      clearTimeout(timer);
+      controller.abort();
     };
   }, [search]);
 
@@ -75,10 +81,10 @@ export function useVendors() {
 
   const hasChanges = Boolean(
     draft &&
-      selected &&
-      (draft.name !== selected.name ||
-        draft.website !== selected.website ||
-        draft.description !== selected.description),
+    selected &&
+    (draft.name !== selected.name ||
+      draft.website !== selected.website ||
+      draft.description !== selected.description),
   );
 
   async function handleSaveVendor(event?: React.FormEvent<HTMLFormElement>) {
