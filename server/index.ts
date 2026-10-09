@@ -3,7 +3,7 @@ import express from "express";
 import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { db, getVendor, listVendors } from "./db.js";
+import { getVendor, listVendors, refreshVendor, updateVendor } from "./db.js";
 import { parseCybersecToolsTool } from "./source.js";
 
 export const app = express();
@@ -63,13 +63,7 @@ app.put("/api/vendors/:id", (request, response) => {
     return;
   }
 
-  db.prepare(
-    `
-    UPDATE vendors SET name = @name, website = @website,
-      description = @description, updated_at = CURRENT_TIMESTAMP
-    WHERE id = @id
-  `,
-  ).run({ ...parsed.data, id: vendor.id });
+  updateVendor(vendor.id, parsed.data);
   response.json(getVendor(vendor.id));
 });
 
@@ -100,27 +94,17 @@ app.post("/api/vendors/:id/refresh", async (request, response) => {
       return;
     }
 
-    const record = parseCybersecToolsTool(await upstream.text());
-    if (!record.name || !record.website || !record.description) {
+    const { name, website, description } = parseCybersecToolsTool(
+      await upstream.text(),
+    );
+    if (!name || !website || !description) {
       response.status(422).json({
         error: "The source page did not contain all required vendor fields",
       });
       return;
     }
 
-    db.prepare(
-      `
-      UPDATE vendors SET name = @name, website = @website,
-        description = @description, refreshed_at = CURRENT_TIMESTAMP,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE id = @id
-    `,
-    ).run({
-      id: vendor.id,
-      name: record.name,
-      website: record.website,
-      description: record.description,
-    });
+    refreshVendor(vendor.id, { name, website, description });
     response.json(getVendor(vendor.id));
   } catch (error) {
     const message =
@@ -133,7 +117,7 @@ const distPath = resolve(process.cwd(), "dist");
 if (existsSync(distPath)) {
   app.use(express.static(distPath));
   app.get("{*path}", (request, response, next) => {
-    if (request.path.startsWith("/api")) {
+    if (request.path.startsWith("/api/")) {
       next();
       return;
     }

@@ -1,7 +1,7 @@
 import { mkdirSync } from "node:fs";
 import Database from "better-sqlite3";
-import { Vendor } from "../src/types";
 import { dirname, resolve } from "node:path";
+import { Draft, SeedVendor, Vendor } from "../src/types";
 
 const databasePath = resolve(process.cwd(), "data", "vendors.sqlite");
 mkdirSync(dirname(databasePath), { recursive: true });
@@ -51,4 +51,33 @@ export function getVendor(id: string): Vendor | undefined {
   `,
     )
     .get(id) as Vendor | undefined;
+}
+
+export function updateVendor(id: string, draft: Draft): void {
+  db.prepare(
+  `
+    UPDATE vendors SET name = @name, website = @website,
+      description = @description, updated_at = CURRENT_TIMESTAMP
+    WHERE id = @id
+  `,
+  ).run({ ...draft, id });
+}
+
+export function refreshVendor(id: string, draft: Draft): void {
+  db.prepare(
+  `
+    UPDATE vendors SET name = @name, website = @website, description = @description,
+      refreshed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+    WHERE id = @id
+  `,
+  ).run({ ...draft, id });
+}
+
+export function insertVendorIfNotExists(vendor: SeedVendor): void {
+  db.prepare(
+  `
+    INSERT OR IGNORE INTO vendors (id, name, website, description, source_url, source_page)
+    VALUES (@id, @name, @website, @description, @sourceUrl, @sourcePage)
+  `,
+  ).run(vendor);
 }
