@@ -4,35 +4,48 @@ export type VendorSourceRecord = {
   name: string;
   website: string;
   description: string;
-  companyProfileUrl: string | null;
 };
 
 function cleanText(value: string | undefined): string {
   return (value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function cleanWebsite(href: string | undefined): string {
+  if (!href) return "";
+  try {
+    const url = new URL(href);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+    url.searchParams.delete("utm_source");
+    url.searchParams.delete("utm_medium");
+    return url.toString();
+  } catch {
+    return ""; // relative or malformed: treated as missing, so refresh returns 422
+  }
+}
+
 export function parseCybersecToolsTool(html: string): VendorSourceRecord {
   const $ = cheerio.load(html);
+
   const companyLink = $("a[href^='/companies/']")
-    .filter((_, element) => /^By\s+/i.test(cleanText($(element).text())))
+    .filter((_, el) => /^By\s+/i.test(cleanText($(el).text())))
     .first();
-  const h1 = cleanText($("h1").first().text());
+  const h1 = $("h1").first();
   const byLine = cleanText(companyLink.text()).replace(/^By\s+/i, "");
+
+  // On-page text first so it matches what the list page shows
   const description = cleanText(
-    $("meta[property='og:description']").attr("content") ??
-      $("meta[name='description']").attr("content") ??
-      $("main p").first().text(),
+    h1.nextAll("p").first().text() ||
+      $("meta[property='og:description']").attr("content") ||
+      $("meta[name='description']").attr("content"),
   );
+
   const websiteLink = $("a")
-    .filter((_, element) => /visit website/i.test(cleanText($(element).text())))
+    .filter((_, el) => /visit website/i.test(cleanText($(el).text())))
     .first();
-  const website = websiteLink.attr("href") ?? "";
 
   return {
-    name:
-      byLine || h1 || cleanText($("meta[property='og:title']").attr("content")),
-    website,
+    name: byLine || cleanText(h1.text()),
+    website: cleanWebsite(websiteLink.attr("href")),
     description,
-    companyProfileUrl: companyLink.attr("href") ?? null,
   };
 }

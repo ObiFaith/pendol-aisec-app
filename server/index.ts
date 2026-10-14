@@ -3,12 +3,23 @@ import express from "express";
 import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { getVendor, listVendors, refreshVendor, updateVendor } from "./db.js";
 import { parseCybersecToolsTool } from "./source.js";
+import { playwrightFetchPage } from "./playwrightFetch.js";
+import {
+  getVendor as getDefaultVendor,
+  listVendors as listDefaultVendors,
+  refreshVendor as refreshDefaultVendor,
+  updateVendor as updateDefaultVendor,
+  type VendorRepository,
+} from "./db.js";
 
-export const app = express();
-const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
-app.use(express.json({ limit: "32kb" }));
+export type VendorStore = Pick<
+  VendorRepository,
+  "getVendor" | "listVendors" | "updateVendor" | "refreshVendor"
+>;
+
+export type FetchPageResponse = Pick<Response, "ok" | "status" | "text">;
+export type FetchPage = (sourceUrl: URL) => Promise<FetchPageResponse>;
 
 export function formatRefreshFailure(status: number): string {
   switch (status) {
@@ -20,6 +31,16 @@ export function formatRefreshFailure(status: number): string {
       return `CybersecTools returned HTTP ${status}`;
   }
 }
+
+const defaultStore: VendorStore = {
+  getVendor: getDefaultVendor,
+  listVendors: listDefaultVendors,
+  updateVendor: updateDefaultVendor,
+  refreshVendor: refreshDefaultVendor,
+};
+
+export const defaultFetchPage: FetchPage = (sourceUrl) =>
+  playwrightFetchPage(sourceUrl);
 
 const vendorFields = z.object({
   name: z.string().trim().min(1).max(160),
@@ -34,97 +55,135 @@ const vendorFields = z.object({
   description: z.string().trim().max(12000),
 });
 
-app.get("/api/vendors", (request, response) => {
-  const search = typeof request.query.q === "string" ? request.query.q : "";
-  response.json(listVendors(search));
-});
-
-app.get("/api/vendors/:id", (request, response) => {
-  const vendor = getVendor(request.params.id);
+export async function refreshVendorRecord({
+  vendorId,
+  store = defaultStore,
+  fetchPage = defaultFetchPage,
+}: {
+  vendorId: string;
+  store?: VendorStore;
+  fetchPage?: FetchPage;
+}) {
+  const vendor = store.getVendor(vendorId);
   if (!vendor) {
-    response.status(404).json({ error: "Vendor not found" });
-    return;
-  }
-  response.json(vendor);
-});
-
-app.put("/api/vendors/:id", (request, response) => {
-  const vendor = getVendor(request.params.id);
-  if (!vendor) {
-    response.status(404).json({ error: "Vendor not found" });
-    return;
-  }
-
-  const parsed = vendorFields.safeParse(request.body);
-  if (!parsed.success) {
-    response.status(400).json({
-      error: parsed.error.issues[0]?.message ?? "Invalid vendor data",
-    });
-    return;
-  }
-
-  updateVendor(vendor.id, parsed.data);
-  response.json(getVendor(vendor.id));
-});
-
-app.post("/api/vendors/:id/refresh", async (request, response) => {
-  const vendor = getVendor(request.params.id);
-  if (!vendor) {
-    response.status(404).json({ error: "Vendor not found" });
-    return;
+    return { status: 404, error: "Vendor not found" } as const;
   }
 
   const source = new URL(vendor.sourceUrl);
   if (source.protocol !== "https:" || source.hostname !== "cybersectools.com") {
-    response
-      .status(400)
-      .json({ error: "The saved source URL is not a CybersecTools page" });
-    return;
+    return {
+      status: 400,
+      error: "The saved source URL is not a CybersecTools page",
+    } as const;
   }
 
   try {
-    const upstream = await fetch(source, {
-      headers: { "User-Agent": "AI-Security-Vendor-Register/1.0" },
-      signal: AbortSignal.timeout(12000),
-    });
+    const upstream = await fetchPage(source);
     if (!upstream.ok) {
-      response
-        .status(upstream.status === 429 ? 429 : 502)
-        .json({ error: formatRefreshFailure(upstream.status) });
-      return;
+      return {
+        status: upstream.status === 429 ? 429 : 502,
+        error: formatRefreshFailure(upstream.status),
+      } as const;
     }
 
     const { name, website, description } = parseCybersecToolsTool(
       await upstream.text(),
     );
     if (!name || !website || !description) {
-      response.status(422).json({
+      return {
+        status: 422,
         error: "The source page did not contain all required vendor fields",
+      } as const;
+    }
+
+    store.refreshVendor(vendor.id, { name, website, description });
+    return {
+      status: 200,
+      vendor: store.getVendor(vendor.id),
+    } as const;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Source refresh failed";
+    return { status: 502, error: message } as const;
+  }
+}
+
+export function createApp({
+  store = defaultStore,
+  fetchPage = defaultFetchPage,
+}: {
+  store?: VendorStore;
+  fetchPage?: FetchPage;
+} = {}) {
+  const app = express();
+  app.use(express.json({ limit: "32kb" }));
+
+  app.get("/api/vendors", (request, response) => {
+    const search = typeof request.query.q === "string" ? request.query.q : "";
+    response.json(store.listVendors(search));
+  });
+
+  app.get("/api/vendors/:id", (request, response) => {
+    const vendor = store.getVendor(request.params.id);
+    if (!vendor) {
+      response.status(404).json({ error: "Vendor not found" });
+      return;
+    }
+    response.json(vendor);
+  });
+
+  app.put("/api/vendors/:id", (request, response) => {
+    const vendor = store.getVendor(request.params.id);
+    if (!vendor) {
+      response.status(404).json({ error: "Vendor not found" });
+      return;
+    }
+
+    const parsed = vendorFields.safeParse(request.body);
+    if (!parsed.success) {
+      response.status(400).json({
+        error: parsed.error.issues[0]?.message ?? "Invalid vendor data",
       });
       return;
     }
 
-    refreshVendor(vendor.id, { name, website, description });
-    response.json(getVendor(vendor.id));
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Source refresh failed";
-    response.status(502).json({ error: message });
-  }
-});
+    store.updateVendor(vendor.id, parsed.data);
+    response.json(store.getVendor(vendor.id));
+  });
 
-const distPath = resolve(process.cwd(), "dist");
-if (existsSync(distPath)) {
-  app.use(express.static(distPath));
-  app.get("{*path}", (request, response, next) => {
-    if (request.path.startsWith("/api/")) {
-      next();
+  app.post("/api/vendors/:id/refresh", async (request, response) => {
+    const result = await refreshVendorRecord({
+      vendorId: request.params.id,
+      store,
+      fetchPage,
+    });
+
+    if ("error" in result) {
+      response.status(result.status).json({ error: result.error });
       return;
     }
-    response.sendFile(resolve(distPath, "index.html"));
+
+    response.json(result.vendor);
   });
+
+  const distPath = resolve(process.cwd(), "dist");
+  if (existsSync(distPath)) {
+    app.use(express.static(distPath));
+    app.get("{*path}", (request, response, next) => {
+      if (request.path.startsWith("/api/")) {
+        next();
+        return;
+      }
+      response.sendFile(resolve(distPath, "index.html"));
+    });
+  }
+
+  return app;
 }
 
+export const app = createApp();
+
+const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
 const isDirectExecution =
   process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 

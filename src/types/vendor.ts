@@ -12,9 +12,9 @@ export type Vendor = {
 
 export type Draft = Pick<Vendor, "name" | "website" | "description">;
 
-export type SeedVendor = Pick<
+export type SeedVendor = Omit<
   Vendor,
-  "name" | "website" | "description" | "sourceUrl"
-> & { sourcePage: 1 | 2 };
+  "createdAt" | "updatedAt" | "refreshedAt"
+>;
 
 export type PageFilter = "all" | "1" | "2";
