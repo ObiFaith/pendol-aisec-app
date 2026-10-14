@@ -3,7 +3,7 @@ import type { Express } from "express";
 import type { AddressInfo } from "node:net";
 import { createDatabase, createVendorRepository } from "./db.js";
 import type { FetchPage } from "./index.js";
-import type { SeedVendor } from "../src/types";
+import type { SeedVendor } from "../types";
 
 export const AIRLOCK_ID = "airlock-digital-agentic-ai-control-and-governance";
 
@@ -20,8 +20,6 @@ export function makeVendor(overrides: Partial<SeedVendor> = {}): SeedVendor {
   };
 }
 
-// Every call creates a brand-new in-memory database, so the real
-// data/vendors.sqlite is never opened by a test.
 export function makeStore(vendors: SeedVendor[] = [makeVendor()]) {
   const store = createVendorRepository(createDatabase(":memory:"));
   vendors.forEach((vendor) => store.insertVendorIfNotExists(vendor));

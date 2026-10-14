@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { CategoryListing, CategoryPage, Vendor } from "../../src/types";
+import { CategoryListing, CategoryPage, Vendor } from "../../types";
 import {
   categoryFile,
   cleanText,
@@ -7,7 +7,7 @@ import {
   pageUrl,
   slugFromUrl,
   writeJson,
-} from "../utils.js";
+} from "../utils";
 
 const BASE = "https://cybersectools.com";
 
@@ -59,7 +59,9 @@ export function extractListings(html: string): CategoryListing[] {
   return listings;
 }
 
-export async function scrapeCategoryPage(page: Vendor["sourcePage"]): Promise<CategoryPage> {
+export async function scrapeCategoryPage(
+  page: Vendor["sourcePage"],
+): Promise<CategoryPage> {
   const sourceUrl = pageUrl(page);
   const listings = extractListings(await get(sourceUrl));
 

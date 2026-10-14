@@ -1,14 +1,11 @@
 import * as cheerio from "cheerio";
+import { cleanText } from "./utils";
 
 export type VendorSourceRecord = {
   name: string;
   website: string;
   description: string;
 };
-
-function cleanText(value: string | undefined): string {
-  return (value ?? "").replace(/\s+/g, " ").trim();
-}
 
 function cleanWebsite(href: string | undefined): string {
   if (!href) return "";
@@ -19,7 +16,7 @@ function cleanWebsite(href: string | undefined): string {
     url.searchParams.delete("utm_medium");
     return url.toString();
   } catch {
-    return ""; // relative or malformed: treated as missing, so refresh returns 422
+    return "";
   }
 }
 
@@ -32,7 +29,6 @@ export function parseCybersecToolsTool(html: string): VendorSourceRecord {
   const h1 = $("h1").first();
   const byLine = cleanText(companyLink.text()).replace(/^By\s+/i, "");
 
-  // On-page text first so it matches what the list page shows
   const description = cleanText(
     h1.nextAll("p").first().text() ||
       $("meta[property='og:description']").attr("content") ||

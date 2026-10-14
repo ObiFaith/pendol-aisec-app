@@ -1,7 +1,7 @@
 import { mkdirSync } from "node:fs";
 import Database from "better-sqlite3";
 import { dirname, resolve } from "node:path";
-import type { Draft, SeedVendor, Vendor } from "../src/types";
+import type { Draft, SeedVendor, Vendor } from "../types";
 
 export function createDatabase(
   databasePath = resolve(process.cwd(), "data", "vendors.sqlite"),
