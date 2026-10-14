@@ -1,7 +1,13 @@
 import { sql } from "drizzle-orm";
-import { check, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  check,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
-export const vendors = sqliteTable(
+export const vendors = pgTable(
   "vendors",
   {
     id: text("id").primaryKey(),
@@ -10,13 +16,22 @@ export const vendors = sqliteTable(
     description: text("description").notNull().default(""),
     sourceUrl: text("source_url").notNull(),
     sourcePage: integer("source_page").notNull(),
-    createdAt: text("created_at")
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "date",
+    })
       .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: text("updated_at")
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "date",
+    })
       .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
-    refreshedAt: text("refreshed_at"),
+      .defaultNow(),
+    refreshedAt: timestamp("refreshed_at", {
+      withTimezone: true,
+      mode: "date",
+    }),
   },
   (table) => [
     check("vendors_source_page_check", sql`${table.sourcePage} IN (1, 2)`),
