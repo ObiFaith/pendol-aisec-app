@@ -102,6 +102,26 @@ export function createVendorRepository(
   };
 }
 
+export function createLazyVendorRepository(): VendorRepository {
+  return {
+    listVendors(search = "") {
+      return createVendorRepository(getDb()).listVendors(search);
+    },
+    getVendor(id: string) {
+      return createVendorRepository(getDb()).getVendor(id);
+    },
+    updateVendor(id: string, draft: Draft) {
+      createVendorRepository(getDb()).updateVendor(id, draft);
+    },
+    refreshVendor(id: string, draft: Draft) {
+      createVendorRepository(getDb()).refreshVendor(id, draft);
+    },
+    insertVendorIfNotExists(vendor: SeedVendor) {
+      createVendorRepository(getDb()).insertVendorIfNotExists(vendor);
+    },
+  };
+}
+
 let databaseInstance: Database.Database | undefined;
 
 export function getDb(): Database.Database {
@@ -109,6 +129,26 @@ export function getDb(): Database.Database {
     databaseInstance = createDatabase();
   }
   return databaseInstance;
+}
+
+export function listVendors(search = ""): Vendor[] {
+  return createLazyVendorRepository().listVendors(search);
+}
+
+export function getVendor(id: string): Vendor | undefined {
+  return createLazyVendorRepository().getVendor(id);
+}
+
+export function updateVendor(id: string, draft: Draft): void {
+  createLazyVendorRepository().updateVendor(id, draft);
+}
+
+export function refreshVendor(id: string, draft: Draft): void {
+  createLazyVendorRepository().refreshVendor(id, draft);
+}
+
+export function insertVendorIfNotExists(vendor: SeedVendor): void {
+  createLazyVendorRepository().insertVendorIfNotExists(vendor);
 }
 
 export const db = new Proxy({} as Database.Database, {

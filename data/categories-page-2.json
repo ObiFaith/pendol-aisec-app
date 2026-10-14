@@ -1,7 +1,7 @@
 {
   "sourceUrl": "https://cybersectools.com/categories/ai-security?page=2",
-  "retrievedAt": "2026-09-30",
-  "note": "Structured extract of the visible vendor listings. CybersecTools returned HTTP 429 to direct raw HTML downloads.",
+  "retrievedAt": "2026-10-14T12:25:32.012Z",
+  "note": "AI Security category listings retrieved from page 2.",
   "listings": [
     {
       "name": "Airia Agent Constraints",
@@ -50,7 +50,7 @@
     },
     {
       "name": "Agen.co Personas",
-      "description": "AI agent governance platform for CISOs, security teams, IT, and developers.",
+      "description": "AI agent governance platform for CISOs, security teams, IT, and devs.",
       "toolUrl": "https://cybersectools.com/tools/agenco-personas"
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "name": "Agen.co Discover",
-      "description": "Discovers and inventories all AI agents across identity providers, cloud, and endpoints.",
+      "description": "Discovers & inventories all AI agents across IdP, cloud, and endpoints.",
       "toolUrl": "https://cybersectools.com/tools/agenco-discover"
     },
     {
@@ -74,8 +74,8 @@
       "toolUrl": "https://cybersectools.com/tools/agen-observability"
     },
     {
-      "name": "0DIN Multi-Model Guardrail Jailbreak Correct Me",
-      "description": "LLM guardrail jailbreak disclosure using a Correct Me fact-check tactic.",
+      "name": "0DIN Multi-Model Guardrail Jailbreak \"Correct Me\"",
+      "description": "LLM guardrail jailbreak disclosure using a \"Correct Me\" fact-check tactic.",
       "toolUrl": "https://cybersectools.com/tools/0din-multi-model-guardrail-jailbreak-correct-me"
     },
     {
@@ -94,8 +94,8 @@
       "toolUrl": "https://cybersectools.com/tools/ai-visibility-and-governance"
     },
     {
-      "name": "Neo",
-      "description": "Agentic AI control platform for SecOps to govern autonomous AI tools at runtime.",
+      "name": "Neo | Agentic Software Control",
+      "description": "Agentic software control, enabling security teams to find, assess, and govern AI agents",
       "toolUrl": "https://cybersectools.com/tools/neo"
     },
     {
@@ -122,6 +122,31 @@
       "name": "RealmGuard",
       "description": "AI guardrail platform detecting harmful outputs, prompt injections & policy violations.",
       "toolUrl": "https://cybersectools.com/tools/realm-labs-platform"
+    },
+    {
+      "name": "RoboShadow",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/roboshadow"
+    },
+    {
+      "name": "OSINTLeak Real-time OSINT Leak Intelligence",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/osintleak-real-time-osint-leak-intelligence"
+    },
+    {
+      "name": "Cybersec Feeds",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/cybersec-feeds"
+    },
+    {
+      "name": "TestSavant AI Security Assurance Platform",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/testsavant-ai-security-assurance-platform"
+    },
+    {
+      "name": "DeHashed",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/dehashed"
     }
   ]
 }

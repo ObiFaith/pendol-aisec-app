@@ -4,7 +4,7 @@ export type Vendor = {
   website: string;
   description: string;
   sourceUrl: string;
-  sourcePage: number;
+  sourcePage: 1 | 2;
   createdAt: string;
   updatedAt: string;
   refreshedAt: string | null;

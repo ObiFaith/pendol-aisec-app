@@ -1,7 +1,7 @@
 {
   "sourceUrl": "https://cybersectools.com/categories/ai-security",
-  "retrievedAt": "2026-09-30",
-  "note": "Structured extract of the visible vendor listings. CybersecTools returned HTTP 429 to direct raw HTML downloads.",
+  "retrievedAt": "2026-10-14T12:25:30.765Z",
+  "note": "AI Security category listings retrieved from page 1.",
   "listings": [
     {
       "name": "WhiteFin",
@@ -20,7 +20,7 @@
     },
     {
       "name": "HOL Guard",
-      "description": "Local-first runtime firewall for AI coding agents.",
+      "description": "Local-first runtime firewall for AI coding agents",
       "toolUrl": "https://cybersectools.com/tools/hol-guard"
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "name": "Sovereign AI Governance",
-      "description": "AI governance gateway enforcing policy, isolation, key management, and audit for AI usage.",
+      "description": "AI governance gateway enforcing policy, isolation, key mgmt, and audit for AI usage.",
       "toolUrl": "https://cybersectools.com/tools/sovereign-ai-governance"
     },
     {
@@ -122,6 +122,31 @@
       "name": "Airia AI Discovery",
       "description": "Discovers and inventories shadow AI usage across enterprise apps, APIs, and code.",
       "toolUrl": "https://cybersectools.com/tools/airia-ai-discovery"
+    },
+    {
+      "name": "RoboShadow",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/roboshadow"
+    },
+    {
+      "name": "OSINTLeak Real-time OSINT Leak Intelligence",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/osintleak-real-time-osint-leak-intelligence"
+    },
+    {
+      "name": "Cybersec Feeds",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/cybersec-feeds"
+    },
+    {
+      "name": "TestSavant AI Security Assurance Platform",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/testsavant-ai-security-assurance-platform"
+    },
+    {
+      "name": "DeHashed",
+      "description": "",
+      "toolUrl": "https://cybersectools.com/tools/dehashed"
     }
   ]
 }
