@@ -11,7 +11,7 @@ import {
   refreshVendor as refreshDefaultVendor,
   updateVendor as updateDefaultVendor,
   type VendorRepository,
-} from "./db.js";
+} from "./database";
 
 export type VendorStore = Pick<
   VendorRepository,

@@ -1,9 +1,9 @@
 import { once } from "node:events";
 import type { Express } from "express";
 import type { AddressInfo } from "node:net";
-import { createDatabase, createVendorRepository } from "./db.js";
 import type { FetchPage } from "./index.js";
 import type { SeedVendor } from "../types";
+import { createDatabase, createVendorRepository } from "./database";
 
 export const AIRLOCK_ID = "airlock-digital-agentic-ai-control-and-governance";
 

@@ -1,21 +1,13 @@
 import { mkdirSync } from "node:fs";
 import { closeBrowser } from "../server/playwrightFetch.js";
-import { createDatabase, createVendorRepository } from "./db.js";
+import { createDatabase, createVendorRepository } from "./database";
 import { SeedVendor, PAGES } from "../types";
 import { slugFromUrl, writeJson } from "./utils";
 import { scrapeCategoryPage, dedupeTools, collectVendors } from "./utils";
 
 function seedDatabase(vendors: SeedVendor[]): void {
-  const db = createDatabase();
-  const repo = createVendorRepository(db);
-
-  const seedAll = db.transaction((items: SeedVendor[]) => {
-    for (const vendor of items) {
-      repo.insertVendorIfNotExists(vendor);
-    }
-  });
-
-  seedAll(vendors);
+  const repo = createVendorRepository(createDatabase());
+  repo.insertVendorsIfNotExist(vendors);
 }
 
 async function main(): Promise<void> {
