@@ -1,4 +1,4 @@
-import type { Draft, Vendor } from "../types/vendor";
+import type { Draft, Vendor } from "../../types";
 
 export async function fetchVendors(
   query: string = "",

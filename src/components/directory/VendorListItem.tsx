@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import type { Vendor } from "../../types/vendor";
+import type { Vendor } from "../../../types";
 import { websiteLabel } from "../../utils/formatters";
 
 type VendorListItemProps = {
@@ -23,9 +23,7 @@ export function VendorListItem({
       type="button"
       onClick={() => onSelect(vendor.id)}
     >
-      <span className="row-number">
-        {String(index + 1).padStart(2, "0")}
-      </span>
+      <span className="row-number">{String(index + 1).padStart(2, "0")}</span>
       <span className="vendor-row-copy">
         <strong>{vendor.name}</strong>
         <small>{websiteLabel(vendor.website)}</small>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Draft, PageFilter, Vendor } from "../types/vendor";
+import type { Draft, PageFilter, Vendor } from "../../types";
 import {
   fetchVendors,
   refreshVendor,

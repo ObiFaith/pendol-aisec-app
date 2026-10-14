@@ -1,5 +1,5 @@
 import { LoaderCircle } from "lucide-react";
-import type { Vendor } from "../../types/vendor";
+import type { Vendor } from "../../../types";
 import { VendorListItem } from "./VendorListItem";
 
 type VendorListProps = {

@@ -1,5 +1,5 @@
 import React from "react";
-import type { Draft, Vendor } from "../../types/vendor";
+import type { Draft, Vendor } from "../../../types";
 import { EmptyDetail } from "./EmptyDetail";
 import { DetailTopline } from "./DetailTopline";
 import { CompanyTitleRow } from "./CompanyTitleRow";

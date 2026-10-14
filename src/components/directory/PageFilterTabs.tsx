@@ -1,5 +1,5 @@
 import { ArrowDownUp } from "lucide-react";
-import type { PageFilter } from "../../types/vendor";
+import type { PageFilter } from "../../../types";
 
 type PageFilterTabsProps = {
   currentFilter: PageFilter;

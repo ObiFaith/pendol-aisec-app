@@ -7,7 +7,7 @@ import {
   LoaderCircle,
   RefreshCw,
 } from "lucide-react";
-import type { Draft } from "../../types/vendor";
+import type { Draft } from "../../../types";
 
 type VendorEditFormProps = {
   draft: Draft;
@@ -52,10 +52,7 @@ export function VendorEditForm({
         required
         maxLength={160}
       />
-      <label
-        className="field-label website-label"
-        htmlFor="vendor-website"
-      >
+      <label className="field-label website-label" htmlFor="vendor-website">
         Company website
       </label>
       <div className="website-field">
@@ -64,9 +61,7 @@ export function VendorEditForm({
           id="vendor-website"
           type="url"
           value={draft.website}
-          onChange={(event) =>
-            onDraftChange("website", event.target.value)
-          }
+          onChange={(event) => onDraftChange("website", event.target.value)}
           placeholder="https://example.com"
         />
         <a
@@ -87,9 +82,7 @@ export function VendorEditForm({
       <textarea
         id="vendor-description"
         value={draft.description}
-        onChange={(event) =>
-          onDraftChange("description", event.target.value)
-        }
+        onChange={(event) => onDraftChange("description", event.target.value)}
         rows={5}
         maxLength={12000}
       />

@@ -1,5 +1,5 @@
 import { SlidersHorizontal } from "lucide-react";
-import type { PageFilter, Vendor } from "../../types/vendor";
+import type { PageFilter, Vendor } from "../../../types";
 import { SearchInput } from "./SearchInput";
 import { PageFilterTabs } from "./PageFilterTabs";
 import { VendorList } from "./VendorList";
