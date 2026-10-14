@@ -63,6 +63,7 @@ There are no configured lint, standalone type-check, formatting, migration, or d
 - A vendor is one distinct company, identified by its stable `id`. `sourceUrl` points to a representative CybersecTools tool page and `sourcePage` records category page 1 or 2.
 - Refresh replaces the stored name, website, and description only after a successful fetch and complete parse. Keep the CybersecTools host/protocol check and avoid changing local data when upstream requests fail.
 - Keep source parsing isolated in `server/source.ts` and cover parsing behavior with focused tests in `server/source.test.ts`.
+- Refresh logic is intentionally factored into a small injectable `refreshVendorRecord` helper and `createApp` factory so tests can use a disposable SQLite repository and stubbed upstream fetcher without touching the checked-in database or live CybersecTools content.
 - Match the existing TypeScript style: strict compiler options are enabled, unused locals/parameters are errors, and the project uses ESM imports with `.js` extensions in server TypeScript imports.
 - Follow the existing single-screen UI patterns: React function components and hooks, shared styles in `src/styles.css`, and Lucide icons for controls. Avoid adding a new state, routing, or styling framework without a clear need.
 
