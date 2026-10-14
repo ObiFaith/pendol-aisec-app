@@ -13,7 +13,7 @@ import { vendors } from "./schema.js";
 
 export type Db = BetterSQLite3Database<typeof schema>;
 
-const MIGRATIONS_FOLDER = resolve(process.cwd(), "drizzle");
+const MIGRATIONS_FOLDER = resolve(process.cwd(), "server/database/migrations");
 
 export function createDatabase(
   databasePath = resolve(process.cwd(), "data", "vendors.sqlite"),
@@ -73,11 +73,9 @@ export function createVendorRepository(database: Db): VendorRepository {
     },
 
     getVendor(id: string): Vendor | undefined {
-      return database
-        .select()
-        .from(vendors)
-        .where(eq(vendors.id, id))
-        .get() as Vendor | undefined;
+      return database.select().from(vendors).where(eq(vendors.id, id)).get() as
+        | Vendor
+        | undefined;
     },
 
     updateVendor(id: string, draft: Draft): void {
