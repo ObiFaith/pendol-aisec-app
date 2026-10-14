@@ -7,8 +7,8 @@
     "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:web\"",
     "dev:server": "tsx watch server/index.ts",
     "dev:web": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build",
-    "start": "tsx server/seed.ts && tsx server/index.ts",
+    "build": "npm install && npx playwright install chromium && npm run build",
+    "start": "tsx server/index.ts",
     "test": "vitest run",
     "seed": "tsx server/seed.ts"
   },
