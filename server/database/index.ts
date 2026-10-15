@@ -7,7 +7,13 @@ import { asc, eq, ilike, or, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { type PgDatabase, type PgQueryResultHKT } from "drizzle-orm/pg-core";
-import type { Draft, SeedVendor, Vendor, VendorRepository } from "../../types";
+import type {
+  Draft,
+  SeedVendor,
+  SourcePage,
+  Vendor,
+  VendorRepository,
+} from "../../types";
 
 export type Db = NodePgDatabase<typeof schema>;
 type AnyPgDb = PgDatabase<PgQueryResultHKT, typeof schema>;
@@ -16,6 +22,17 @@ const MIGRATIONS_FOLDER = resolve(process.cwd(), "server/database/migrations");
 
 let pool: Pool | undefined;
 let databaseInstance: Db | undefined;
+
+const iso = (value: string | null): string | null =>
+  value === null ? null : new Date(value).toISOString();
+
+const toVendor = (row: typeof vendors.$inferSelect): Vendor => ({
+  ...row,
+  sourcePage: row.sourcePage as SourcePage,
+  createdAt: iso(row.createdAt) as string,
+  updatedAt: iso(row.updatedAt) as string,
+  refreshedAt: iso(row.refreshedAt),
+});
 
 export function createDatabase(
   connectionString = process.env.DATABASE_URL,
@@ -77,11 +94,12 @@ export function createVendorRepository(database: AnyPgDb): VendorRepository {
               ilike(vendors.description, pattern),
             );
 
-      return (await database
+      const rows = await database
         .select()
         .from(vendors)
         .where(where)
-        .orderBy(asc(sql`lower(${vendors.name})`))) as Vendor[];
+        .orderBy(asc(sql`lower(${vendors.name})`));
+      return rows.map(toVendor);
     },
 
     async getVendor(id) {
@@ -90,7 +108,7 @@ export function createVendorRepository(database: AnyPgDb): VendorRepository {
         .from(vendors)
         .where(eq(vendors.id, id))
         .limit(1);
-      return row as Vendor | undefined;
+      return toVendor(row);
     },
 
     async updateVendor(id, draft) {
