@@ -37,12 +37,17 @@ const limit = Number(process.env.SEED_LIMIT ?? Infinity);
 
 export async function collectVendors(
   tools: ReturnType<typeof dedupeTools>,
+  opts: {
+    skipUrls?: Set<string>;
+    onVendor?: (v: SeedVendor) => Promise<void>;
+  } = {},
 ): Promise<SeedVendor[]> {
   const vendors = new Map<string, SeedVendor>();
 
-  // Sequential on purpose: polite 3s delay between detail-page requests.
   for (const [slug, { listing, sourcePage }] of [...tools].slice(0, limit)) {
     const sourceUrl = listing.toolUrl;
+    if (opts.skipUrls?.has(sourceUrl)) continue;
+
     const { name, website, description } = parseCybersecToolsTool(
       await get(sourceUrl, 3000),
     );
@@ -59,14 +64,17 @@ export async function collectVendors(
       continue;
     }
 
-    vendors.set(id, {
+    const vendor = {
       id,
       name: cleanText(name),
       website,
       description,
       sourceUrl,
       sourcePage,
-    });
+    }
+
+    vendors.set(id, vendor);
+    await opts.onVendor?.(vendor); // saved immediately
     console.log("Collected vendor:", id);
   }
 

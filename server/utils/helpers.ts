@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { playwrightFetchPage } from "../../server/playwrightFetch";
 
 const BASE = "https://cybersectools.com";
@@ -19,26 +19,48 @@ export const pageUrl = (page: 1 | 2 = 1): string =>
 export const categoryFile = (page: 1 | 2 = 1): string =>
   `categories-page-${page}.json`;
 
-export async function get(url: string, delayMs = 0): Promise<string> {
-  const response = await playwrightFetchPage(new URL(url));
+export async function get(
+  url: string,
+  delayMs = 0,
+  retries = 4,
+): Promise<string> {
+  for (let attempt = 0; ; attempt++) {
+    const response = await playwrightFetchPage(new URL(url));
 
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status} for ${url}. Stopping.`);
+    if (response.status === 429 && attempt < retries) {
+      const wait = 30_000 * 2 ** attempt; // 30s, 60s, 120s, 240s
+      console.warn(`429 for ${url}, retrying in ${wait / 1000}s`);
+      await sleep(wait);
+      continue;
+    }
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} for ${url}. Stopping.`);
+    }
+
+    const html = await response.text();
+    if (delayMs > 0) await sleep(delayMs);
+    return html;
   }
-
-  const html = await response.text();
-  if (delayMs > 0) await sleep(delayMs);
-
-  return html;
 }
 
-// Overwrites the file if it already exists.
-export function writeJson(filename: string, data: unknown): void {
-  writeFileSync(
-    join("data", filename),
-    `${JSON.stringify(data, null, 2)}\n`,
-    "utf8",
+const comparable = (data: unknown): string =>
+  JSON.stringify(data, (key, value) =>
+    key === "retrievedAt" ? undefined : value,
   );
+
+function readJson(path: string): unknown {
+  return existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : undefined;
+}
+
+export function writeJson(filename: string, data: unknown): void {
+  const path = join("data", filename);
+  const existing = readJson(path);
+
+  if (existing !== undefined && comparable(existing) === comparable(data)) {
+    return;
+  }
+
+  writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
 export function formatRefreshFailure(status: number): string {

@@ -23,13 +23,18 @@ export function createDatabase(
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set");
   }
+
   pool = new Pool({
     connectionString,
-    ssl:
-      process.env.DATABASE_SSL === "true"
-        ? { rejectUnauthorized: false }
-        : undefined,
+    keepAlive: true,
+    connectionTimeoutMillis: 20_000,
+    idleTimeoutMillis: 0,
   });
+
+  pool.on("error", (err) =>
+    console.error("Idle pg client error:", err.message),
+  );
+
   return drizzle(pool, { schema });
 }
 

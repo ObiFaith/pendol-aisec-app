@@ -1,5 +1,5 @@
+import { PAGES } from "../types";
 import { mkdirSync } from "node:fs";
-import { PAGES, SeedVendor } from "../types";
 import { slugFromUrl, writeJson } from "./utils";
 import { closeBrowser } from "../server/playwrightFetch.js";
 import { collectVendors, dedupeTools, scrapeCategoryPage } from "./utils";
@@ -10,16 +10,14 @@ import {
   runMigrations,
 } from "./database";
 
-async function seedDatabase(vendors: SeedVendor[]): Promise<void> {
-  const db = getDb();
-  await runMigrations(db);
-  await createVendorRepository(db).insertVendorsIfNotExist(vendors);
-}
-
 async function main(): Promise<void> {
   mkdirSync("data", { recursive: true });
 
   try {
+    const db = getDb();
+    await runMigrations(db);
+    const repo = createVendorRepository(db);
+
     const [first, second] = await Promise.all(PAGES.map(scrapeCategoryPage));
     const firstSlugs = new Set(
       first.listings.map((l) => slugFromUrl(l.toolUrl)),
@@ -36,13 +34,30 @@ async function main(): Promise<void> {
     const unique = dedupeTools([first, second]);
     console.log(`Unique tools across both pages: ${unique.size}`);
 
-    const vendors = await collectVendors(unique);
-    writeJson("vendors.json", vendors);
+    const existing = new Set(
+      (await repo.listVendors()).map((v) => v.sourceUrl),
+    );
 
-    await seedDatabase(vendors);
+    const added = await collectVendors(unique, {
+      skipUrls: existing,
+      onVendor: (v) => repo.insertVendorIfNotExists(v),
+    });
+
+    const all = await repo.listVendors();
+    writeJson(
+      "vendors.json",
+      all.map(({ id, name, website, description, sourceUrl, sourcePage }) => ({
+        id,
+        name,
+        website,
+        description,
+        sourceUrl,
+        sourcePage,
+      })),
+    );
 
     console.log(
-      `Seeding complete: ${vendors.length} vendors saved to data/vendors.json and the database`,
+      `Seeding complete: ${added.length} new vendors, ${all.length} total in the database`,
     );
   } finally {
     await closeBrowser();
