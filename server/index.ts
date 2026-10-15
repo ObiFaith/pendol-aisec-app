@@ -78,7 +78,7 @@ export async function refreshVendorRecord({
       } as const;
     }
 
-    store.refreshVendor(vendor.id, { name, website, description });
+    await store.refreshVendor(vendor.id, { name, website, description });
     return {
       status: 200,
       vendor: (await store.getVendor(vendor.id)),

@@ -36,9 +36,6 @@ export function makeStore(
   };
   seed.forEach(insert);
 
-  // Always hand out copies and replace rows instead of mutating them.
-  // Otherwise `before` and the stored row are the same object, and
-  // "leaves the row untouched" assertions pass for the wrong reason.
   const copy = (v: Vendor | undefined) => (v ? { ...v } : undefined);
 
   return {
