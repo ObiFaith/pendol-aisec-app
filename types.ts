@@ -34,3 +34,26 @@ export type CategoryPage = {
   note: string;
   listings: CategoryListing[];
 };
+
+export type VendorSourceRecord = {
+  name: string;
+  website: string;
+  description: string;
+};
+
+export type FetchPageResponse = Pick<Response, "ok" | "status" | "text">;
+export type FetchPage = (sourceUrl: URL) => Promise<FetchPageResponse>;
+
+export type VendorStore = Pick<
+  VendorRepository,
+  "getVendor" | "listVendors" | "updateVendor" | "refreshVendor"
+>;
+
+export type VendorRepository = {
+  listVendors: (search?: string) => Promise<Vendor[]>;
+  getVendor: (id: string) => Promise<Vendor | undefined>;
+  updateVendor: (id: string, draft: Draft) => Promise<void>;
+  refreshVendor: (id: string, draft: Draft) => Promise<void>;
+  insertVendorIfNotExists: (vendor: SeedVendor) => Promise<void>;
+  insertVendorsIfNotExist: (items: SeedVendor[]) => Promise<void>;
+};

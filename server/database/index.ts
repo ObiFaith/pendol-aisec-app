@@ -1,44 +1,52 @@
-import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import Database from "better-sqlite3";
-import { eq, or, sql } from "drizzle-orm";
-import {
-  drizzle,
-  type BetterSQLite3Database,
-} from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import type { Draft, SeedVendor, Vendor } from "../../types";
-import * as schema from "./schema.js";
+import "dotenv/config";
+import { Pool } from "pg";
+import { resolve } from "node:path";
 import { vendors } from "./schema.js";
+import * as schema from "./schema.js";
+import { asc, eq, ilike, or, sql } from "drizzle-orm";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
+import { type PgDatabase, type PgQueryResultHKT } from "drizzle-orm/pg-core";
+import type { Draft, SeedVendor, Vendor, VendorRepository } from "../../types";
 
-export type Db = BetterSQLite3Database<typeof schema>;
+export type Db = NodePgDatabase<typeof schema>;
+type AnyPgDb = PgDatabase<PgQueryResultHKT, typeof schema>;
 
 const MIGRATIONS_FOLDER = resolve(process.cwd(), "server/database/migrations");
 
+let pool: Pool | undefined;
+let databaseInstance: Db | undefined;
+
 export function createDatabase(
-  databasePath = resolve(process.cwd(), "data", "vendors.sqlite"),
+  connectionString = process.env.DATABASE_URL,
 ): Db {
-  mkdirSync(dirname(databasePath), { recursive: true });
-
-  const sqlite = new Database(databasePath);
-  sqlite.pragma("journal_mode = WAL");
-
-  const database = drizzle(sqlite, { schema });
-
-  // Replaces the old CREATE TABLE IF NOT EXISTS block.
-  migrate(database, { migrationsFolder: MIGRATIONS_FOLDER });
-
-  return database;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set");
+  }
+  pool = new Pool({
+    connectionString,
+    ssl:
+      process.env.DATABASE_SSL === "true"
+        ? { rejectUnauthorized: false }
+        : undefined,
+  });
+  return drizzle(pool, { schema });
 }
 
-export type VendorRepository = {
-  listVendors: (search?: string) => Vendor[];
-  getVendor: (id: string) => Vendor | undefined;
-  updateVendor: (id: string, draft: Draft) => void;
-  refreshVendor: (id: string, draft: Draft) => void;
-  insertVendorIfNotExists: (vendor: SeedVendor) => void;
-  insertVendorsIfNotExist: (items: SeedVendor[]) => void;
-};
+export function getDb(): Db {
+  databaseInstance ??= createDatabase();
+  return databaseInstance;
+}
+
+export async function runMigrations(database: Db = getDb()): Promise<void> {
+  await migrate(database, { migrationsFolder: MIGRATIONS_FOLDER });
+}
+
+export async function closeDatabase(): Promise<void> {
+  await pool?.end();
+  pool = undefined;
+  databaseInstance = undefined;
+}
 
 const toInsertRow = (vendor: SeedVendor) => ({
   id: vendor.id,
@@ -49,9 +57,9 @@ const toInsertRow = (vendor: SeedVendor) => ({
   sourcePage: vendor.sourcePage,
 });
 
-export function createVendorRepository(database: Db): VendorRepository {
+export function createVendorRepository(database: AnyPgDb): VendorRepository {
   return {
-    listVendors(search = "") {
+    async listVendors(search = "") {
       const term = search.trim();
       const pattern = `%${term}%`;
 
@@ -59,139 +67,80 @@ export function createVendorRepository(database: Db): VendorRepository {
         term === ""
           ? undefined
           : or(
-              sql`${vendors.name} LIKE ${pattern} COLLATE NOCASE`,
-              sql`${vendors.website} LIKE ${pattern} COLLATE NOCASE`,
-              sql`${vendors.description} LIKE ${pattern} COLLATE NOCASE`,
+              ilike(vendors.name, pattern),
+              ilike(vendors.website, pattern),
+              ilike(vendors.description, pattern),
             );
 
-      return database
+      return (await database
         .select()
         .from(vendors)
         .where(where)
-        .orderBy(sql`${vendors.name} COLLATE NOCASE`)
-        .all() as Vendor[];
+        .orderBy(asc(sql`lower(${vendors.name})`))) as Vendor[];
     },
 
-    getVendor(id: string): Vendor | undefined {
-      return database.select().from(vendors).where(eq(vendors.id, id)).get() as
-        | Vendor
-        | undefined;
+    async getVendor(id) {
+      const [row] = await database
+        .select()
+        .from(vendors)
+        .where(eq(vendors.id, id))
+        .limit(1);
+      return row as Vendor | undefined;
     },
 
-    updateVendor(id: string, draft: Draft): void {
-      database
+    async updateVendor(id, draft) {
+      await database
         .update(vendors)
         .set({
           name: draft.name,
           website: draft.website,
           description: draft.description,
-          updatedAt: sql`CURRENT_TIMESTAMP`,
+          updatedAt: sql`now()`,
         })
-        .where(eq(vendors.id, id))
-        .run();
+        .where(eq(vendors.id, id));
     },
 
-    refreshVendor(id: string, draft: Draft): void {
-      database
+    async refreshVendor(id, draft) {
+      await database
         .update(vendors)
         .set({
           name: draft.name,
           website: draft.website,
           description: draft.description,
-          refreshedAt: sql`CURRENT_TIMESTAMP`,
-          updatedAt: sql`CURRENT_TIMESTAMP`,
+          refreshedAt: sql`now()`,
+          updatedAt: sql`now()`,
         })
-        .where(eq(vendors.id, id))
-        .run();
+        .where(eq(vendors.id, id));
     },
 
-    insertVendorIfNotExists(vendor: SeedVendor): void {
-      database
+    async insertVendorIfNotExists(vendor) {
+      await database
         .insert(vendors)
         .values(toInsertRow(vendor))
-        .onConflictDoNothing()
-        .run();
+        .onConflictDoNothing();
     },
 
-    // One transaction: every insert is "INSERT ... ON CONFLICT DO NOTHING",
-    // and if anything throws, the whole batch is rolled back.
-    insertVendorsIfNotExist(items: SeedVendor[]): void {
-      database.transaction((tx) => {
-        for (const vendor of items) {
-          tx.insert(vendors)
-            .values(toInsertRow(vendor))
-            .onConflictDoNothing()
-            .run();
-        }
-      });
+    async insertVendorsIfNotExist(items) {
+      if (items.length === 0) return;
+      await database
+        .insert(vendors)
+        .values(items.map(toInsertRow))
+        .onConflictDoNothing();
     },
   };
 }
 
-export function createLazyVendorRepository(): VendorRepository {
-  return {
-    listVendors(search = "") {
-      return createVendorRepository(getDb()).listVendors(search);
-    },
-    getVendor(id: string) {
-      return createVendorRepository(getDb()).getVendor(id);
-    },
-    updateVendor(id: string, draft: Draft) {
-      createVendorRepository(getDb()).updateVendor(id, draft);
-    },
-    refreshVendor(id: string, draft: Draft) {
-      createVendorRepository(getDb()).refreshVendor(id, draft);
-    },
-    insertVendorIfNotExists(vendor: SeedVendor) {
-      createVendorRepository(getDb()).insertVendorIfNotExists(vendor);
-    },
-    insertVendorsIfNotExist(items: SeedVendor[]) {
-      createVendorRepository(getDb()).insertVendorsIfNotExist(items);
-    },
-  };
-}
+const repo = () => createVendorRepository(getDb());
 
-let databaseInstance: Db | undefined;
+export const listVendors = (search = "") => repo().listVendors(search);
+export const getVendor = (id: string) => repo().getVendor(id);
+export const updateVendor = (id: string, draft: Draft) =>
+  repo().updateVendor(id, draft);
+export const refreshVendor = (id: string, draft: Draft) =>
+  repo().refreshVendor(id, draft);
+export const insertVendorIfNotExists = (v: SeedVendor) =>
+  repo().insertVendorIfNotExists(v);
+export const insertVendorsIfNotExist = (items: SeedVendor[]) =>
+  repo().insertVendorsIfNotExist(items);
 
-export function getDb(): Db {
-  if (!databaseInstance) {
-    databaseInstance = createDatabase();
-  }
-  return databaseInstance;
-}
-
-export function listVendors(search = ""): Vendor[] {
-  return createLazyVendorRepository().listVendors(search);
-}
-
-export function getVendor(id: string): Vendor | undefined {
-  return createLazyVendorRepository().getVendor(id);
-}
-
-export function updateVendor(id: string, draft: Draft): void {
-  createLazyVendorRepository().updateVendor(id, draft);
-}
-
-export function refreshVendor(id: string, draft: Draft): void {
-  createLazyVendorRepository().refreshVendor(id, draft);
-}
-
-export function insertVendorIfNotExists(vendor: SeedVendor): void {
-  createLazyVendorRepository().insertVendorIfNotExists(vendor);
-}
-
-export function insertVendorsIfNotExist(items: SeedVendor[]): void {
-  createLazyVendorRepository().insertVendorsIfNotExist(items);
-}
-
-export const db = new Proxy({} as Db, {
-  get(_target, property, receiver) {
-    const activeDatabase = getDb();
-    const value = Reflect.get(activeDatabase as object, property, receiver);
-    return typeof value === "function" ? value.bind(activeDatabase) : value;
-  },
-  set(_target, property, value) {
-    const activeDatabase = getDb();
-    return Reflect.set(activeDatabase as object, property, value);
-  },
-});
+export const db = getDb; // if other code imported `db`, switch it to `getDb()`

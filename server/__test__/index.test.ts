@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { createApp, type FetchPage } from "..";
+import { createApp} from "..";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   AIRLOCK_ID,
@@ -9,6 +9,7 @@ import {
   respond,
   startServer,
 } from "../testUtils";
+import { FetchPage } from "../../types";
 
 let running: Awaited<ReturnType<typeof startServer>> | undefined;
 afterEach(async () => {
@@ -85,7 +86,7 @@ describe("PUT /api/vendors/:id", () => {
     });
 
     expect(res.status).toBe(200);
-    expect(store.getVendor(AIRLOCK_ID)).toMatchObject({
+    expect(await store.getVendor(AIRLOCK_ID)).toMatchObject({
       name: "Edited",
       website: "https://edited.example/",
       description: "Edited description",
@@ -101,12 +102,12 @@ describe("PUT /api/vendors/:id", () => {
     ],
   ])("400 on %s and leaves the row untouched", async (_label, body) => {
     const { url, store } = await setup();
-    const before = store.getVendor(AIRLOCK_ID);
+    const before = await store.getVendor(AIRLOCK_ID);
 
     const res = await putJson(`${url}/api/vendors/${AIRLOCK_ID}`, body);
 
     expect(res.status).toBe(400);
-    expect(store.getVendor(AIRLOCK_ID)).toEqual(before);
+    expect(await store.getVendor(AIRLOCK_ID)).toEqual(before);
   });
 
   it("404s for an unknown id", async () => {
@@ -129,12 +130,12 @@ describe("POST /api/vendors/:id/refresh", () => {
 
     expect(res.status).toBe(200);
     expect(await res.json()).toMatchObject({ name: "Acme" });
-    expect(store.getVendor(AIRLOCK_ID)?.refreshedAt).not.toBeNull();
+    expect((await store.getVendor(AIRLOCK_ID))?.refreshedAt).not.toBeNull();
   });
 
   it("429: returns a JSON error and keeps the stored data", async () => {
     const { url, store } = await setup({ fetchPage: respond(429) });
-    const before = store.getVendor(AIRLOCK_ID);
+    const before = (await store.getVendor(AIRLOCK_ID));
 
     const res = await fetch(`${url}/api/vendors/${AIRLOCK_ID}/refresh`, {
       method: "POST",
@@ -142,21 +143,21 @@ describe("POST /api/vendors/:id/refresh", () => {
 
     expect(res.status).toBe(429);
     expect((await res.json()).error).toMatch(/rate-limiting/i);
-    expect(store.getVendor(AIRLOCK_ID)).toEqual(before);
+    expect(await store.getVendor(AIRLOCK_ID)).toEqual(before);
   });
 
   it("422: incomplete page keeps the stored data", async () => {
     const { url, store } = await setup({
       fetchPage: respond(200, "<h1>Only a title</h1>"),
     });
-    const before = store.getVendor(AIRLOCK_ID);
+    const before = await store.getVendor(AIRLOCK_ID);
 
     const res = await fetch(`${url}/api/vendors/${AIRLOCK_ID}/refresh`, {
       method: "POST",
     });
 
     expect(res.status).toBe(422);
-    expect(store.getVendor(AIRLOCK_ID)).toEqual(before);
+    expect(await store.getVendor(AIRLOCK_ID)).toEqual(before);
   });
 
   it("404s for an unknown id", async () => {

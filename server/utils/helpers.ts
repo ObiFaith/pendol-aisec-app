@@ -40,3 +40,14 @@ export function writeJson(filename: string, data: unknown): void {
     "utf8",
   );
 }
+
+export function formatRefreshFailure(status: number): string {
+  switch (status) {
+    case 429:
+      return "CybersecTools is rate-limiting requests right now. Please wait a moment and try again.";
+    case 403:
+      return "CybersecTools is blocking requests from this environment. Please try again later.";
+    default:
+      return `CybersecTools returned HTTP ${status}`;
+  }
+}

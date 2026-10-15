@@ -1,13 +1,19 @@
 import { mkdirSync } from "node:fs";
-import { closeBrowser } from "../server/playwrightFetch.js";
-import { createDatabase, createVendorRepository } from "./database";
-import { SeedVendor, PAGES } from "../types";
+import { PAGES, SeedVendor } from "../types";
 import { slugFromUrl, writeJson } from "./utils";
-import { scrapeCategoryPage, dedupeTools, collectVendors } from "./utils";
+import { closeBrowser } from "../server/playwrightFetch.js";
+import { collectVendors, dedupeTools, scrapeCategoryPage } from "./utils";
+import {
+  closeDatabase,
+  createVendorRepository,
+  getDb,
+  runMigrations,
+} from "./database";
 
-function seedDatabase(vendors: SeedVendor[]): void {
-  const repo = createVendorRepository(createDatabase());
-  repo.insertVendorsIfNotExist(vendors);
+async function seedDatabase(vendors: SeedVendor[]): Promise<void> {
+  const db = getDb();
+  await runMigrations(db);
+  await createVendorRepository(db).insertVendorsIfNotExist(vendors);
 }
 
 async function main(): Promise<void> {
@@ -33,13 +39,14 @@ async function main(): Promise<void> {
     const vendors = await collectVendors(unique);
     writeJson("vendors.json", vendors);
 
-    seedDatabase(vendors);
+    await seedDatabase(vendors);
 
     console.log(
       `Seeding complete: ${vendors.length} vendors saved to data/vendors.json and the database`,
     );
   } finally {
     await closeBrowser();
+    await closeDatabase();
   }
 }
 

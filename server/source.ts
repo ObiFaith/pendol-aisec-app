@@ -1,11 +1,6 @@
 import * as cheerio from "cheerio";
 import { cleanText } from "./utils";
-
-export type VendorSourceRecord = {
-  name: string;
-  website: string;
-  description: string;
-};
+import { VendorSourceRecord } from "../types";
 
 function cleanWebsite(href: string | undefined): string {
   if (!href) return "";

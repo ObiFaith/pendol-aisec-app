@@ -1,5 +1,5 @@
 import { chromium, type Browser } from "playwright";
-import type { FetchPage } from "./index.js";
+import { FetchPage } from "../types";
 
 let browserPromise: Promise<Browser> | undefined;
 

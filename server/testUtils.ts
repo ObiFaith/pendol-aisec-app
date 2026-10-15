@@ -1,9 +1,7 @@
 import { once } from "node:events";
 import type { Express } from "express";
 import type { AddressInfo } from "node:net";
-import type { FetchPage } from "./index.js";
-import type { SeedVendor } from "../types";
-import { createDatabase, createVendorRepository } from "./database";
+import type { FetchPage, SeedVendor, Vendor, VendorRepository } from "../types";
 
 export const AIRLOCK_ID = "airlock-digital-agentic-ai-control-and-governance";
 
@@ -20,10 +18,67 @@ export function makeVendor(overrides: Partial<SeedVendor> = {}): SeedVendor {
   };
 }
 
-export function makeStore(vendors: SeedVendor[] = [makeVendor()]) {
-  const store = createVendorRepository(createDatabase(":memory:"));
-  vendors.forEach((vendor) => store.insertVendorIfNotExists(vendor));
-  return store;
+export function makeStore(
+  seed: SeedVendor[] = [makeVendor()],
+): VendorRepository {
+  const rows = new Map<string, Vendor>();
+  const now = () => new Date().toISOString();
+
+  const insert = (v: SeedVendor) => {
+    if (!rows.has(v.id)) {
+      rows.set(v.id, {
+        ...v,
+        createdAt: now(),
+        updatedAt: now(),
+        refreshedAt: null,
+      } as Vendor);
+    }
+  };
+  seed.forEach(insert);
+
+  // Always hand out copies and replace rows instead of mutating them.
+  // Otherwise `before` and the stored row are the same object, and
+  // "leaves the row untouched" assertions pass for the wrong reason.
+  const copy = (v: Vendor | undefined) => (v ? { ...v } : undefined);
+
+  return {
+    async listVendors(search = "") {
+      const term = search.trim().toLowerCase();
+      return [...rows.values()]
+        .filter((v) =>
+          [v.name, v.website, v.description].some((f) =>
+            f.toLowerCase().includes(term),
+          ),
+        )
+        .sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+        )
+        .map((v) => ({ ...v }));
+    },
+    async getVendor(id) {
+      return copy(rows.get(id));
+    },
+    async updateVendor(id, draft) {
+      const row = rows.get(id);
+      if (row) rows.set(id, { ...row, ...draft, updatedAt: now() });
+    },
+    async refreshVendor(id, draft) {
+      const row = rows.get(id);
+      if (row)
+        rows.set(id, {
+          ...row,
+          ...draft,
+          refreshedAt: now(),
+          updatedAt: now(),
+        });
+    },
+    async insertVendorIfNotExists(v) {
+      insert(v);
+    },
+    async insertVendorsIfNotExist(items) {
+      items.forEach(insert);
+    },
+  };
 }
 
 export const respond =

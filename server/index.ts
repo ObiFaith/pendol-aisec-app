@@ -3,6 +3,8 @@ import express from "express";
 import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { formatRefreshFailure } from "./utils";
+import { FetchPage, VendorStore } from "../types.js";
 import { parseCybersecToolsTool } from "./source.js";
 import { playwrightFetchPage } from "./playwrightFetch.js";
 import {
@@ -10,27 +12,7 @@ import {
   listVendors as listDefaultVendors,
   refreshVendor as refreshDefaultVendor,
   updateVendor as updateDefaultVendor,
-  type VendorRepository,
 } from "./database";
-
-export type VendorStore = Pick<
-  VendorRepository,
-  "getVendor" | "listVendors" | "updateVendor" | "refreshVendor"
->;
-
-export type FetchPageResponse = Pick<Response, "ok" | "status" | "text">;
-export type FetchPage = (sourceUrl: URL) => Promise<FetchPageResponse>;
-
-export function formatRefreshFailure(status: number): string {
-  switch (status) {
-    case 429:
-      return "CybersecTools is rate-limiting requests right now. Please wait a moment and try again.";
-    case 403:
-      return "CybersecTools is blocking requests from this environment. Please try again later.";
-    default:
-      return `CybersecTools returned HTTP ${status}`;
-  }
-}
 
 const defaultStore: VendorStore = {
   getVendor: getDefaultVendor,
@@ -64,7 +46,7 @@ export async function refreshVendorRecord({
   store?: VendorStore;
   fetchPage?: FetchPage;
 }) {
-  const vendor = store.getVendor(vendorId);
+  const vendor = await store.getVendor(vendorId);
   if (!vendor) {
     return { status: 404, error: "Vendor not found" } as const;
   }
@@ -99,7 +81,7 @@ export async function refreshVendorRecord({
     store.refreshVendor(vendor.id, { name, website, description });
     return {
       status: 200,
-      vendor: store.getVendor(vendor.id),
+      vendor: (await store.getVendor(vendor.id)),
     } as const;
   } catch (error) {
     const message =
@@ -118,13 +100,13 @@ export function createApp({
   const app = express();
   app.use(express.json({ limit: "32kb" }));
 
-  app.get("/api/vendors", (request, response) => {
+  app.get("/api/vendors", async (request, response) => {
     const search = typeof request.query.q === "string" ? request.query.q : "";
-    response.json(store.listVendors(search));
+    response.json(await store.listVendors(search));
   });
 
-  app.get("/api/vendors/:id", (request, response) => {
-    const vendor = store.getVendor(request.params.id);
+  app.get("/api/vendors/:id", async (request, response) => {
+    const vendor = await store.getVendor(request.params.id);
     if (!vendor) {
       response.status(404).json({ error: "Vendor not found" });
       return;
@@ -132,8 +114,8 @@ export function createApp({
     response.json(vendor);
   });
 
-  app.put("/api/vendors/:id", (request, response) => {
-    const vendor = store.getVendor(request.params.id);
+  app.put("/api/vendors/:id", async (request, response) => {
+    const vendor = await store.getVendor(request.params.id);
     if (!vendor) {
       response.status(404).json({ error: "Vendor not found" });
       return;
@@ -147,8 +129,8 @@ export function createApp({
       return;
     }
 
-    store.updateVendor(vendor.id, parsed.data);
-    response.json(store.getVendor(vendor.id));
+    await store.updateVendor(vendor.id, parsed.data);
+    response.json((await store.getVendor(vendor.id)));
   });
 
   app.post("/api/vendors/:id/refresh", async (request, response) => {
