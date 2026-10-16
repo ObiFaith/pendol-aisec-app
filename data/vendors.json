@@ -192,6 +192,14 @@
     "sourcePage": 1
   },
   {
+    "id": "trent-ai",
+    "name": "Trent AI",
+    "website": "https://trent.ai/openclaw/",
+    "description": "AI gateway security audit skill for inspecting and auditing AI traffic.",
+    "sourceUrl": "https://cybersectools.com/tools/openclaw-continuous-security-audit-skill",
+    "sourcePage": 2
+  },
+  {
     "id": "verno-labs",
     "name": "Verno Labs",
     "website": "https://vernolabs.ai/platform",
@@ -205,6 +213,14 @@
     "website": "https://votal.ai/agent-idp-guardrails",
     "description": "Issues cryptographic identities & enforces runtime policies for AI agents.",
     "sourceUrl": "https://cybersectools.com/tools/votal-ai-agent-idp-and-guardrails",
+    "sourcePage": 1
+  },
+  {
+    "id": "whitefin",
+    "name": "WhiteFin",
+    "website": "https://whitefin.ai/",
+    "description": "Authority layer that bounds and verifies what AI agents are permitted to do.",
+    "sourceUrl": "https://cybersectools.com/tools/whitefin",
     "sourcePage": 1
   },
   {
